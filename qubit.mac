@@ -1,12 +1,13 @@
 /* internal starts */
 /* Do not use KET directly, use Ket and Bra. */
 kill(KET)$
-KET["+"] : XBasis[1]$
-KET["-"] : XBasis[2]$
-KET[">"] : YBasis[1]$
-KET["<"] : YBasis[2]$
-KET["0"] : ZBasis[1]$
-KET["1"] : ZBasis[2]$
+/* {X|Y|Z}BASIS defined in quantum.mac */
+KET["+"] : XBASIS[1]$
+KET["-"] : XBASIS[2]$
+KET[">"] : YBASIS[1]$
+KET["<"] : YBASIS[2]$
+KET["0"] : ZBASIS[1]$
+KET["1"] : ZBASIS[2]$
 KET[otherwise] := error("no ket for", otherwise, "only +-><01 are accepted");
 /* internal ends */
 
