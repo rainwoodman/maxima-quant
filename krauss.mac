@@ -1,0 +1,30 @@
+load(lrats);
+
+/* internal starts */
+/* Gives the unitarity constraint of krauss operators
+   which is used to simplify the time development */
+KRAUSS_CONSTRAINT(KraussOperators) := block(
+    local(LHS, RHS,LHSF, RHSF, rt, i, j),
+    LHS: apply("+",
+           makelist(dagger(KraussOperators[i]) . KraussOperators[i],
+            i, 1, length(KraussOperators)
+           )
+         ),
+    RHS: ident(rank(KraussOperators[1])),
+    LHSF : flatten(makelist(LHS[i], i, 1, length(LHS))),
+    RHSF : flatten(makelist(RHS[i], i, 1, length(RHS))),
+    makelist(LHSF[i] = RHSF[i], i, 1, length(LHSF))
+)$
+/* internal ends */
+
+/* Evoles the density operator %rho by one time step
+   Using the given Krauss Operators */
+TimeDevelopment(%rho, KraussOperators) := lratsubst(
+    KRAUSS_CONSTRAINT(KraussOperators),
+    apply("+",
+    makelist(KraussOperators[i] . %rho . dagger(KraussOperators[i]),
+             i, 1, length(KraussOperators))
+    )
+)$
+
+/* vim: set ft=maxima ts=4 et: */

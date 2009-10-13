@@ -1,0 +1,36 @@
+/* internal starts */
+/* Do not use KET directly, use Ket and Bra. */
+kill(KET)$
+KET["+"] : XBasis[1]$
+KET["-"] : XBasis[2]$
+KET[">"] : YBasis[1]$
+KET["<"] : YBasis[2]$
+KET["0"] : ZBasis[1]$
+KET["1"] : ZBasis[2]$
+KET[otherwise] := error("no ket for", otherwise, "only +-><01 are accepted");
+/* internal ends */
+
+/* We can get a quantum state by calling Ket[state]
+   where state is amongst
+   Ket["+"] := |x, +}
+   Ket["-"] := |x, -}
+   Ket[">"] := |y, +}
+   Ket["<"] := |y, -}
+   Ket["0"] := |z, +}
+   Ket["1"] := |z, -}
+   Diad["+-"] := |x, +}{x, -|
+   Notice one can also create things like
+   Diad["+0"], which makes little sense */
+
+kill(Ket)$
+kill(Bra)$
+kill(Diad)$
+Ket[state] := KET[state]$
+Bra[state] := dagger(KET[state])$
+Diad[pair] := block(
+    local(list),
+    list: charlist(pair),
+    Ket[list[1]] . Bra[list[2]]
+)$
+
+/* vim: set ft=maxima ts=4 et: */
