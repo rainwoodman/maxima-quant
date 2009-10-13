@@ -18,12 +18,24 @@ KRAUSS_CONSTRAINT(KraussOperators) := block(
 /* internal ends */
 
 /* Evoles the density operator %rho by one time step
-   Using the given Krauss Operators */
-TimeDevelopment(%rho, KraussOperators) := lratsubst(
-    KRAUSS_CONSTRAINT(KraussOperators),
-    apply("+",
-    makelist(KraussOperators[i] . %rho . dagger(KraussOperators[i]),
+   Using the given Krauss Operators,
+   You can add optional constrains(eg, the second order
+   is zero) for simplifing the result.
+ */
+TimeDevelopment(%rho, KraussOperators, [optional]) := block(
+    local(all_cons),
+    all_cons : if listp(optional[1]) then optional[1] else optional,
+    all_cons : append(
+        lratsubst(all_cons, KRAUSS_CONSTRAINT(KraussOperators)),
+        all_cons
+    ),
+    fullratsubst(
+        all_cons,
+        apply("+",
+            makelist(
+             KraussOperators[i] . %rho . dagger(KraussOperators[i]),
              i, 1, length(KraussOperators))
+        )
     )
 )$
 
