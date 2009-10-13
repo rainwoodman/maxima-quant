@@ -1,9 +1,10 @@
-load(lrats);
+requires("lrats");
 
+provides("krauss");
 /* internal starts */
 /* Gives the unitarity constraint of krauss operators
    which is used to simplify the time development */
-KRAUSS_CONSTRAINT(KraussOperators) := block(
+KRAUSS_CONSTRAINT[KraussOperators] := block(
     local(LHS, RHS,LHSF, RHSF, rt, i, j),
     LHS: apply("+",
            makelist(dagger(KraussOperators[i]) . KraussOperators[i],
@@ -13,7 +14,7 @@ KRAUSS_CONSTRAINT(KraussOperators) := block(
     RHS: ident(rank(KraussOperators[1])),
     LHSF : flatten(makelist(LHS[i], i, 1, length(LHS))),
     RHSF : flatten(makelist(RHS[i], i, 1, length(RHS))),
-    makelist(LHSF[i] = RHSF[i], i, 1, length(LHSF))
+    makelist(lratsubst(GlobalFacts, LHSF[i] = RHSF[i]), i, 1, length(LHSF))
 )$
 /* internal ends */
 
@@ -22,15 +23,9 @@ KRAUSS_CONSTRAINT(KraussOperators) := block(
    You can add optional constrains(eg, the second order
    is zero) for simplifing the result.
  */
-TimeDevelopment(%rho, KraussOperators, [optional]) := block(
-    local(all_cons),
-    all_cons : if listp(optional[1]) then optional[1] else optional,
-    all_cons : append(
-        lratsubst(all_cons, KRAUSS_CONSTRAINT(KraussOperators)),
-        all_cons
-    ),
-    fullratsubst(
-        all_cons,
+TimeDevelopment(%rho, KraussOperators) := block(
+    lratsubst(
+        append(GlobalFacts, KRAUSS_CONSTRAINT[KraussOperators]),
         apply("+",
             makelist(
              KraussOperators[i] . %rho . dagger(KraussOperators[i]),

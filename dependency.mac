@@ -1,0 +1,14 @@
+LOADED_MODULES : {}$
+
+provides(module) := (
+    LOADED_MODULES: union(LOADED_MODULES, {module}),
+    print(module," is loaded"), "")$
+
+requires(module) := if not elementp(module, LOADED_MODULES) then
+    (
+    load(module),
+    /* This is to be compatible with other non-quantum modules */
+    LOADED_MODULES: union(LOADED_MODULES, {module})
+    )$
+
+/* vim: set ft=maxima ts=4 et : */

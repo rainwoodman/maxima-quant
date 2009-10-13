@@ -1,54 +1,18 @@
 /* quantum.lisp is for wxMaxima's wxMathML pretty prints */
 load("quantum.lisp")$
-/* nchrpl is required for mattrace */
-load("nchrpl")$
+load("dependency")$
+
+requires("bloch")$
+requires("decoherent")$
+requires("krauss")$
+requires("qubit")$
+requires("spin")$
 
 /* Taking the hermi adjoint */
 /* fixme: does adjoint do the same thing?*/
 dagger(x) := conjugate(transpose(x));
 
-/* internal begins */
-PAULIMATRICES : [
-    matrix([0, 1], [1, 0]),
-    matrix([0, -%i], [%i, 0]),
-    matrix([1, 0], [0, -1])
-]$
-XBASIS : [
-    transpose([sqrt(1/2), sqrt(1/2)]),
-    transpose([sqrt(1/2), -sqrt(1/2)])
-];
-YBASIS : [
-    transpose([sqrt(1/2), %i * sqrt(1/2)]),
-    transpose([sqrt(1/2), - %i * sqrt(1/2)])
-];
-ZBASIS : [
-    transpose([1, 0]),
-    transpose([0, 1])
-];
-/* internal ends */
-
-/* Define the Pauli Matrices
-   %sigma[1] := %sigma["x"], and so on
-   Only accepts 1, 2, 3, or "x", "y", "z", case insensitive
-   */
-kill(%sigma)$
-%sigma[1] : PAULIMATRICES[1]$
-%sigma[2] : PAULIMATRICES[2]$
-%sigma[3] : PAULIMATRICES[3]$
-%sigma["x"] : PAULIMATRICES[1]$
-%sigma["X"] : PAULIMATRICES[1]$
-%sigma["y"] : PAULIMATRICES[2]$
-%sigma["Y"] : PAULIMATRICES[2]$
-%sigma["z"] : PAULIMATRICES[3]$
-%sigma["Z"] : PAULIMATRICES[3]$
-%sigma[otherwise] := error ("%sigma out of range, use 1,2,3 or x,y,z")$
-
-/* Transform a density operator to a Bloch Vector
-   This is not secure, the trace of the densit op is not checked */
-DensityToBloch(%rho) := makelist(mattrace(%rho. %sigma[i]), i, 1, 3);
-BlochToDensity(vector) := 1/2 * (
-            ident(2)
-          + apply("+", makelist(vector[i] * %sigma[i], i, 1, 3))
-);
+/* Global Facts is used to simplify most caculation results */
+GlobalFacts : [];
 
 /* vim: set ft=maxima ts=4 et: */

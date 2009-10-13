@@ -1,0 +1,19 @@
+requires("qubit")$
+requires("krauss")$
+/* nchrpl is required for mattrace */
+requires("nchrpl")$
+
+provides("decoherent")$
+
+/* Takes projector indices A and B, FIXME: arbitary Projectors? */
+DecoherentFunctional(%rho, A, B, K) := block(
+    local(AL, BL, %omega, SuperOP, T, r, n),
+    AL : charlist(A),
+    BL : charlist(B),
+    SuperOP[i, j, l, m] := factor(Bra[l] . TimeDevelopment(Ket[i] . Bra[j], K) . Ket[m]),
+    T[n] := SuperOP[AL[n-1],BL[n-1],AL[n], BL[n]],
+    n : length(AL),
+    r : (Bra[BL[n]]. Ket[AL[n]]) * product(T[i], i, 2, n) * (Bra[AL[1]] . TimeDevelopment(%rho, K) . Ket[BL[1]]),
+    [factor(r), listarray(T)]
+);
+/* vim: set ft=maxima ts=4 et: */

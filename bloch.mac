@@ -1,0 +1,15 @@
+/* nchrpl is required for mattrace */
+requires("nchrpl")$
+requires("qubit")$
+
+provides("bloch")$
+
+/* Transform a density operator to a Bloch Vector
+   This is not secure, the trace of the densit op is not checked */
+DensityToBloch(%rho) := makelist(mattrace(%rho. %sigma[i]), i, 1, 3);
+BlochToDensity(vector) := 1/2 * (
+            ident(2)
+          + apply("+", makelist(vector[i] * %sigma[i], i, 1, 3))
+);
+
+/* vim: set ft=maxima ts=4 et: */

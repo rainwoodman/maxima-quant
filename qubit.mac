@@ -1,3 +1,7 @@
+requires("spin");
+
+provides("qubit");
+
 /* internal starts */
 /* Do not use KET directly, use Ket and Bra. */
 kill(KET)$
@@ -26,6 +30,7 @@ KET[otherwise] := error("no ket for", otherwise, "only +-><01 are accepted");
 kill(Ket)$
 kill(Bra)$
 kill(Diad)$
+kill(Prj)$
 Ket[state] := KET[state]$
 Bra[state] := dagger(KET[state])$
 Diad[pair] := block(
@@ -33,5 +38,6 @@ Diad[pair] := block(
     list: charlist(pair),
     Ket[list[1]] . Bra[list[2]]
 )$
+Prj[state] := Ket[state] . Bra[state]$
 
 /* vim: set ft=maxima ts=4 et: */
