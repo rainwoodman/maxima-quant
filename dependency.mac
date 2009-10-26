@@ -1,8 +1,8 @@
 LOADED_MODULES : {}$
 
-provides(module) := (
+provides(module) := block (
     LOADED_MODULES: union(LOADED_MODULES, {module}),
-    print(module," is loaded"), "")$
+    concat(module," is loaded"))$
 
 requires(module) := if not elementp(module, LOADED_MODULES) then
     (
