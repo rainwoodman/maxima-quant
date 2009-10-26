@@ -1,5 +1,5 @@
 /* quantum.lisp is for wxMaxima's wxMathML pretty prints */
-load("quantum.lisp")$
+load("pretty-print.lisp")$
 load("dependency")$
 
 requires("bloch")$
@@ -7,6 +7,7 @@ requires("decoherent")$
 requires("krauss")$
 requires("qubit")$
 requires("spin")$
+requires("super-op")$
 
 /* Taking the hermi adjoint */
 /* fixme: does adjoint do the same thing?*/

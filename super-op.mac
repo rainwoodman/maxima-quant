@@ -1,0 +1,16 @@
+provides("super-op")$
+requires("qubit")$
+requires("krauss")$
+
+SuperOperator(FROM, TO, KraussOperators) := block(
+	local(RHO_RROM, RHO_TO),
+	RHO_FROM: Diad[FROM],
+	RHO_TO: Diad[TO],
+	[FROM, TO, 
+	lratsubst(GlobalFacts, radcan(mattrace(
+		dagger(RHO_TO) 
+		. TimeDevelopment(RHO_FROM, KraussOperators))))
+	]
+);
+
+/* vim: set ft=maxima ts=4 et: */
